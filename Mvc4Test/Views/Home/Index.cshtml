@@ -1,0 +1,75 @@
+﻿@using Kendo.Mvc.Extensions
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+            </p>
+        </div>
+    </section>
+}
+
+<div id="GridTest"></div>
+<div id="BookingsGrid1" name="BookingsGrid"></div>
+@(Html.Kendo().Grid<Mvc4Test.Models.BookingDto>()
+    .Name("BookingsGrid")
+    .Columns(columns =>
+    {
+        columns.Bound(b => b.BookingID).Groupable(false);
+        columns.Bound(b => b.BookingDateString).Title("Booking Date");
+        columns.Bound(b => b.ReleaseDateString).Title("Release Date");
+    })
+    .Pageable()
+    .Navigatable()
+    .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(5)
+        .Read(read => read.Action("Bookings_Read", "Home"))
+    )
+)
+
+<h3 id="FirstName"></h3>
+<ol class="round">
+    <li class="one">
+        <h5>Getting Started</h5>
+        <a href="http://go.microsoft.com/fwlink/?LinkId=245151">Learn more…</a>
+    </li>
+</ol>
+
+<h3>Grid with single row selection enabled</h3>
+
+<script>
+    var bookingsGrid;
+    var bookingId;
+
+    $(document).ready(function () {
+        //$("#GridTest").dialog();
+        var bookingsGrid = $("#BookingsGrid").data("kendoGrid");
+        //var row = bookingsGrid.select();
+        bookingsGrid.bind("change", onSelectBooking);
+    });
+
+    function onSelectBooking(){
+        //$("#GridTest").dialog();
+        var selectedRows = this.select();
+        var selectedDataItems = [];
+
+        for (var i = 0; i < selectedRows.length; i++) {
+            var dataItem = this.dataItem(selectedRows[i]);
+            bookingId = dataItem.BookingID;
+            //alert(bookingId);
+            //selectedDataItems.push(dataItem);
+        }
+    }
+
+    function onGetInmateSucceed(){
+    }
+</script>
